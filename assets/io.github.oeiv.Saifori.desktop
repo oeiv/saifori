@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Application
+Name=Saifori
+Comment=Private personal finance tracker
+Exec=saifori
+Icon=io.github.oeiv.Saifori
+Terminal=false
+Categories=Office;Finance;
+Keywords=Budget;Money;Expenses;Income;
+StartupNotify=true
+DBusActivatable=false

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>io.github.oeiv.Saifori</id>
+  <name>Saifori</name>
+  <summary>Track your spending and plan your budget</summary>
+  <summary xml:lang="es">Controla tus gastos y planifica tu presupuesto</summary>
+  <developer id="io.github.oeiv"><name>oeiv</name></developer>
+  <url type="homepage">https://github.com/oeiv/saifori</url>
+  <url type="bugtracker">https://github.com/oeiv/saifori/issues</url>
+  <url type="vcs-browser">https://github.com/oeiv/saifori</url>
+  <content_rating type="oars-1.1" />
+  <categories><category>Office</category><category>Finance</category></categories>
+  <branding>
+    <color type="primary" scheme_preference="light">#1c63c7</color>
+    <color type="primary" scheme_preference="dark">#4e9bff</color>
+  </branding>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>MIT</project_license>
+  <description>
+    <p>Track income, expenses, budgets and spending trends with native GTK4 and Libadwaita.</p>
+    <p>Keep a local record of income and expenses, set category budgets, and compare spending across months. Transfers are tracked separately from income and spending.</p>
+    <p>Use the optional AI assistant with your own provider account and API key. Requests send your submitted text, recent chat context and financial aggregates to the selected provider. Provider usage may incur charges. Core ledger features work offline without an account.</p>
+    <p>Records and exported backups are not encrypted. Privacy Mode hides information on screen only.</p>
+  </description>
+  <launchable type="desktop-id">io.github.oeiv.Saifori.desktop</launchable>
+  <!-- These release URLs must be made public and verified before submission. -->
+  <screenshots>
+    <screenshot type="default">
+      <caption>Overview of income, expenses and budgets using synthetic data</caption>
+      <image>https://raw.githubusercontent.com/oeiv/saifori/v0.1.0/assets/screenshots/overview.png</image>
+    </screenshot>
+    <screenshot>
+      <caption>Review transactions grouped by month using synthetic data</caption>
+      <image>https://raw.githubusercontent.com/oeiv/saifori/v0.1.0/assets/screenshots/transactions.png</image>
+    </screenshot>
+  </screenshots>
+  <provides><binary>saifori</binary></provides>
+  <releases>
+    <release version="0.1.0" date="2026-11-06" type="development">
+      <description><p>Initial development preview for local testing.</p></description>
+    </release>
+  </releases>
+</component>

@@ -1,0 +1,62 @@
+# Rust build artifacts
+/target/
+**/target/
+*.rlib
+*.rmeta
+*.pdb
+*.dSYM/
+
+# Flatpak build and export artifacts
+/.flatpak-builder/
+/build/
+/repo/
+/dist/
+*.flatpak
+*.flatpakref
+*.flatpakrepo
+
+# Local-only offline dependencies and generated vendor configuration
+/vendor/
+/.cargo/config.toml
+/.cargo/config.toml.preparing
+/.cargo/config.toml.prepare-backup
+/.cargo-home/
+
+# Personal finance databases, sidecar files, exports, backups
+*.db
+*.db-*
+*.sqlite
+*.sqlite-*
+*.sqlite3
+*.sqlite3-*
+*.csv
+*.bak
+*.backup
+*.log
+
+# Secrets and environment overrides
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+*.token
+.secrets/
+
+# Editor, OS, Python caches and local scratch
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+__pycache__/
+*.py[cod]
+.pytest_cache/
+*.swp
+*.swo
+*~
+*.tmp
+
+# NOTE: Cargo.lock is intentionally NOT ignored.
+# Commit the lockfile for this application after generating it locally.

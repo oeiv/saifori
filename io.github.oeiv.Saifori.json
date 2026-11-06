@@ -1,0 +1,79 @@
+{
+    "id": "io.github.oeiv.Saifori",
+    "runtime": "org.gnome.Platform",
+    "runtime-version": "50",
+    "sdk": "org.gnome.Sdk",
+    "sdk-extensions": [
+        "org.freedesktop.Sdk.Extension.rust-stable"
+    ],
+    "command": "saifori",
+    "finish-args": [
+        "--share=ipc",
+        "--socket=wayland",
+        "--socket=fallback-x11",
+        "--device=dri",
+        "--share=network",
+        "--talk-name=org.freedesktop.secrets"
+    ],
+    "modules": [
+        {
+            "name": "saifori",
+            "buildsystem": "simple",
+            "build-options": {
+                "append-path": "/usr/lib/sdk/rust-stable/bin",
+                "env": {
+                    "CARGO_NET_OFFLINE": "true"
+                }
+            },
+            "build-commands": [
+                "CARGO_HOME=$PWD/cargo cargo build --release --frozen --offline",
+                "install -Dm0755 target/release/saifori /app/bin/saifori",
+                "install -Dm0644 assets/io.github.oeiv.Saifori.desktop /app/share/applications/io.github.oeiv.Saifori.desktop",
+                "install -Dm0644 assets/io.github.oeiv.Saifori.metainfo.xml /app/share/metainfo/io.github.oeiv.Saifori.metainfo.xml",
+                "install -Dm0644 assets/io.github.oeiv.Saifori.svg /app/share/icons/hicolor/scalable/apps/io.github.oeiv.Saifori.svg",
+                "install -Dm0644 assets/wallet-symbolic.svg /app/share/icons/hicolor/symbolic/actions/wallet-symbolic.svg",
+                "install -Dm0644 assets/coffee-symbolic.svg /app/share/icons/hicolor/symbolic/actions/coffee-symbolic.svg",
+                "install -Dm0644 assets/tag-symbolic.svg /app/share/icons/hicolor/symbolic/actions/tag-symbolic.svg",
+                "install -Dm0644 assets/icons/hicolor/scalable/actions/saifori-chart-symbolic.svg /app/share/icons/hicolor/scalable/actions/saifori-chart-symbolic.svg",
+                "install -Dm0644 assets/icons/hicolor/scalable/actions/saifori-sparkle-symbolic.svg /app/share/icons/hicolor/scalable/actions/saifori-sparkle-symbolic.svg",
+                "install -Dm0644 assets/icons/hicolor/scalable/actions/saifori-cart-symbolic.svg /app/share/icons/hicolor/scalable/actions/saifori-cart-symbolic.svg",
+                "install -Dm0644 assets/icons/hicolor/scalable/actions/saifori-cup-symbolic.svg /app/share/icons/hicolor/scalable/actions/saifori-cup-symbolic.svg",
+                "install -Dm0644 assets/icons/hicolor/scalable/actions/saifori-budget-symbolic.svg /app/share/icons/hicolor/scalable/actions/saifori-budget-symbolic.svg",
+                "install -Dm0644 assets/icons/hicolor/scalable/actions/saifori-car-symbolic.svg /app/share/icons/hicolor/scalable/actions/saifori-car-symbolic.svg",
+                "install -Dm0644 assets/icons/hicolor/scalable/actions/saifori-briefcase-symbolic.svg /app/share/icons/hicolor/scalable/actions/saifori-briefcase-symbolic.svg",
+                "install -Dm0644 LICENSE /app/share/licenses/io.github.oeiv.Saifori/LICENSE"
+            ],
+            "sources": [
+                {
+                    "type": "file",
+                    "path": "Cargo.toml"
+                },
+                {
+                    "type": "file",
+                    "path": "Cargo.lock"
+                },
+                {
+                    "type": "file",
+                    "path": "LICENSE"
+                },
+                {
+                    "type": "dir",
+                    "path": "src",
+                    "dest": "src"
+                },
+                {
+                    "type": "dir",
+                    "path": "assets",
+                    "dest": "assets"
+                },
+                {
+                    "type": "dir",
+                    "path": "locales",
+                    "dest": "locales"
+                },
+                "packaging/cargo-sources.json"
+            ]
+        }
+    ],
+    "x-development-only": "AI-assisted local development manifest; not for Flathub submission. See README.md."
+}

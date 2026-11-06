@@ -1,0 +1,108 @@
+/* Saifori — minimal layout CSS. GTK4/libadwaita own surface colors, focus,
+ * accessibility states, buttons, sidebar selection, cards, and typography.
+ * No custom application theme, no forced light/dark palette. */
+
+/* Layout-only spacing around native Adwaita cards and pages. */
+.saifori-page { padding: 24px 28px 28px; }
+.saifori-card { padding: 15px 17px; }
+.saifori-card.compact { padding: 11px 14px; }
+.saifori-metric-card { min-height: 72px; }
+.saifori-details-panel, .saifori-transaction-table,
+.saifori-transfer-history, .saifori-transaction-ledger,
+.saifori-transaction-scroll, .saifori-activity-list-scroll,
+.saifori-details-scroll, .saifori-transfer-list-scroll,
+.saifori-smart-workspace, .saifori-capture-review-scroll { min-height: 0; }
+.saifori-details-panel { min-width: 280px; }
+.saifori-transaction-table { padding: 5px 8px 8px; }
+.saifori-range { min-width: 125px; }
+.saifori-filter-row, .saifori-timeline-controls { margin-bottom: 4px; }
+
+/* Tabular finance values; colors use the semantic Adwaita classes
+ * .success and .error added directly in Rust. */
+.saifori-amount, .saifori-kpi, .saifori-category-amount,
+.saifori-annual-figure label, .saifori-timeline-summary {
+  font-feature-settings: 'tnum';
+}
+.saifori-amount, .saifori-row-description, .saifori-month-name { font-weight: 650; }
+.saifori-kpi { font-weight: 650; }
+.saifori-trend-arrow { font-size: 24px; }
+.saifori-section-title { font-weight: 650; }
+.saifori-category-amount { opacity: 0.78; }
+.saifori-timeline-summary { opacity: 0.72; font-size: 12px; }
+.saifori-day-name { font-size: 12px; font-weight: 600; }
+.saifori-timeline-node { color: @accent_color; font-size: 11px; }
+
+/* Transaction table: the header is outside the scroll viewport. */
+.saifori-table-heading {
+  padding: 10px 11px;
+  border-bottom: 1px solid alpha(@window_fg_color,0.12);
+}
+.saifori-table-row {
+  min-height: 50px;
+  padding: 5px 9px;
+  border-bottom: 1px solid alpha(@window_fg_color,0.055);
+}
+.saifori-table-row:hover { background-color: alpha(@window_fg_color,0.045); }
+.saifori-table-row.selected { background-color: alpha(@accent_bg_color,0.17); }
+.saifori-list-row { padding: 8px 4px; }
+.saifori-detail-row { padding: 4px 0; }
+.saifori-empty { padding: 22px 10px; }
+
+/* Month and day hierarchy. GTK4 does not implement CSS position:sticky;
+ * scrolling/revealing is managed by the existing Rust widget logic.
+ * The layered card background is opaque even if @card_bg_color itself is
+ * translucent on a particular Adwaita theme. */
+.saifori-timeline-month { padding: 4px 2px 5px; }
+button.flat.saifori-month-toggle {
+  background-color: @window_bg_color;
+  background-image: linear-gradient(@card_bg_color, @card_bg_color);
+  border: 1px solid alpha(@window_fg_color,0.085);
+  border-radius: 9px;
+  min-height: 42px;
+  padding: 3px 10px;
+  box-shadow: none;
+}
+button.flat.saifori-month-toggle:hover,
+button.flat.saifori-month-toggle:active {
+  background-image:
+    linear-gradient(alpha(@window_fg_color,0.04), alpha(@window_fg_color,0.04)),
+    linear-gradient(@card_bg_color, @card_bg_color);
+}
+.saifori-day-toggle { min-height: 32px; padding: 2px 8px; }
+.saifori-timeline-days {
+  margin: 4px 0 4px 20px;
+  padding-left: 12px;
+  border-left: 2px solid alpha(@accent_color,0.27);
+}
+.saifori-timeline-days:dir(rtl) {
+  margin: 4px 20px 4px 0;
+  padding-left: 0;
+  padding-right: 12px;
+  border-left: none;
+  border-right: 2px solid alpha(@accent_color,0.27);
+}
+.saifori-timeline-day { margin: 1px 0; }
+.saifori-timeline-day .saifori-table-row { margin-left: 7px; }
+.saifori-timeline-day:dir(rtl) .saifori-table-row { margin-left: 0; margin-right: 7px; }
+
+/* Special-purpose compact editors/charts: native card buttons and widgets
+ * remain untouched. */
+.saifori-annual-summary { padding: 10px 13px; }
+.saifori-annual-figure { min-width: 132px; padding: 0 8px; }
+.saifori-metric-icon, .saifori-action-icon { min-width: 39px; min-height: 39px; }
+.saifori-metric-icon.income, .saifori-soft-blue { color: @success_color; }
+.saifori-metric-icon.expense { color: @error_color; }
+.saifori-metric-icon.balance, .saifori-soft-purple { color: @accent_color; }
+.saifori-conversation, .saifori-capture { min-height: 0; padding: 12px 14px; }
+.saifori-messages { padding: 10px 8px; }
+.saifori-chat-scroll { min-height: 250px; }
+.saifori-chat-bubble { border-radius: 12px; padding: 10px 12px; }
+.saifori-chat-mine { background: alpha(@accent_bg_color,0.19); }
+.saifori-chat-assistant { background: alpha(@window_fg_color,0.055); }
+.saifori-composer { padding-top: 8px; }
+.saifori-capture-composer { padding: 10px; }
+.saifori-capture-editor { min-height: 105px; }
+.saifori-capture-review-scroll { min-height: 280px; }
+.saifori-draft { padding: 7px 9px; }
+.saifori-transfer-pinned-month { padding: 8px 10px; }
+.saifori-duplicate-alert { padding: 8px 10px; }
