@@ -54,9 +54,8 @@ binary, then run `bash tools/desktop-smoke.sh`. It uses temporary storage and
 synthetic records to exercise navigation, labelled controls and transaction
 creation. Logs and screenshots are saved under the ignored
 `target/desktop-smoke-logs/` directory; set `SAIFORI_LOG_DIR` to choose another
-location. CI uploads these files as a `saifori-ci-logs-*` artifact even when a
-check fails. Logs contain test diagnostics and synthetic data; database files
-and credentials are not uploaded.
+location. These local logs contain test diagnostics and synthetic data;
+database files and credentials are not included in diagnostic exports.
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for contribution guidance.
 

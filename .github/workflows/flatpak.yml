@@ -1,0 +1,67 @@
+name: Flatpak
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'src/**'
+      - 'assets/**'
+      - 'locales/**'
+      - 'packaging/cargo-sources.json'
+      - 'Cargo.toml'
+      - 'Cargo.lock'
+      - 'LICENSE'
+      - 'io.github.oeiv.Saifori.json'
+      - '.github/workflows/flatpak.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    container:
+      image: ghcr.io/flathub-infra/flatpak-github-actions:gnome-50
+      # Flatpak Builder needs nested user/mount namespaces for its sandbox.
+      options: --privileged
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v6
+      - name: Build and install development bundle
+        run: |
+          mkdir -p "$RUNNER_TEMP/saifori-flatpak-logs"
+          exec > >(tee "$RUNNER_TEMP/saifori-flatpak-logs/build.log") 2>&1
+          # The disposable build container may not have a machine ID or a session bus.
+          dbus-uuidgen --ensure=/etc/machine-id
+          dbus-run-session -- bash -euo pipefail <<'BUILD'
+          flatpak --version
+          flatpak-builder --version
+          flatpak remote-add --user --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+          # Copy files instead of using FUSE; the Flatpak build sandbox stays enabled.
+          flatpak-builder --user --assumeyes --sandbox --disable-rofiles-fuse --install-deps-from=flathub --force-clean --repo=repo build io.github.oeiv.Saifori.json
+          test -x build/files/bin/saifori
+          flatpak build-bundle --runtime-repo=https://dl.flathub.org/repo/flathub.flatpakrepo repo Saifori.flatpak io.github.oeiv.Saifori
+          flatpak install --user --assumeyes --noninteractive ./Saifori.flatpak
+          flatpak info --user io.github.oeiv.Saifori
+          BUILD
+      - name: Upload installable bundle
+        uses: actions/upload-artifact@v7
+        with:
+          name: Saifori-flatpak-x86_64
+          path: Saifori.flatpak
+          if-no-files-found: error
+          retention-days: 7
+      - name: Upload build diagnostics
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: saifori-flatpak-logs-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            ${{ runner.temp }}/saifori-flatpak-logs/
+            build/metadata
+          if-no-files-found: warn
+          retention-days: 7
