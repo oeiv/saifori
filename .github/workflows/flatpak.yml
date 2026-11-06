@@ -22,32 +22,51 @@ jobs:
   build:
     runs-on: ubuntu-24.04
     timeout-minutes: 60
-    container:
-      image: ghcr.io/flathub-infra/flatpak-github-actions:gnome-50
-      # Flatpak Builder needs nested user/mount namespaces for its sandbox.
-      options: --privileged
-    defaults:
-      run:
-        shell: bash
     steps:
       - uses: actions/checkout@v6
-      - name: Build and install development bundle
+      - name: Prepare runner disk space
+        shell: bash
         run: |
           mkdir -p "$RUNNER_TEMP/saifori-flatpak-logs"
+          exec > >(tee "$RUNNER_TEMP/saifori-flatpak-logs/disk.log") 2>&1
+          df -h "$GITHUB_WORKSPACE"
+          # Only unused SDKs on this disposable GitHub-hosted runner are removed.
+          # Run on the host before pulling the large GNOME build image.
+          sudo rm -rf /usr/local/lib/android /usr/share/dotnet /opt/ghc /opt/hostedtoolcache/CodeQL
+          df -h "$GITHUB_WORKSPACE"
+          available=$(df -B1 --output=avail "$GITHUB_WORKSPACE" | tail -1 | tr -d ' ')
+          if (( available < 20 * 1024 * 1024 * 1024 )); then
+            echo 'At least 20 GiB of free disk space is required for the GNOME SDK build.' >&2
+            exit 1
+          fi
+      - name: Build and install development bundle
+        shell: bash
+        run: |
           exec > >(tee "$RUNNER_TEMP/saifori-flatpak-logs/build.log") 2>&1
-          # The disposable build container may not have a machine ID or a session bus.
+          docker pull ghcr.io/flathub-infra/flatpak-github-actions:gnome-50
+          df -h "$GITHUB_WORKSPACE"
+          # Flatpak needs nested namespaces. Only this build container is privileged.
+          docker run --rm --privileged -i \
+            --mount "type=bind,src=$GITHUB_WORKSPACE,dst=/work" \
+            --workdir /work \
+            ghcr.io/flathub-infra/flatpak-github-actions:gnome-50 \
+            bash -euo pipefail <<'CONTAINER'
           dbus-uuidgen --ensure=/etc/machine-id
           dbus-run-session -- bash -euo pipefail <<'BUILD'
           flatpak --version
           flatpak-builder --version
+          df -h /work
+          # Include disk usage even when dependency installation or export fails.
+          trap 'result=$?; df -h /work; exit "$result"' EXIT
           flatpak remote-add --user --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
-          # Copy files instead of using FUSE; the Flatpak build sandbox stays enabled.
+          # Copy files instead of using FUSE; the build sandbox stays enabled.
           flatpak-builder --user --assumeyes --sandbox --disable-rofiles-fuse --install-deps-from=flathub --force-clean --repo=repo build io.github.oeiv.Saifori.json
           test -x build/files/bin/saifori
           flatpak build-bundle --runtime-repo=https://dl.flathub.org/repo/flathub.flatpakrepo repo Saifori.flatpak io.github.oeiv.Saifori
           flatpak install --user --assumeyes --noninteractive ./Saifori.flatpak
           flatpak info --user io.github.oeiv.Saifori
           BUILD
+          CONTAINER
       - name: Upload installable bundle
         uses: actions/upload-artifact@v7
         with:
